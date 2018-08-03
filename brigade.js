@@ -1,7 +1,7 @@
 const { events, Job } = require("brigadier");
 
 events.on("push", function(e, project) {
-  console.log("received push for commit " + e.commit)
+  console.log("received push for commit " + e.revision.commit)
   
   hello.env.CHATKEY = project.secrets.chatKey
   var hello = new Job("hello", "alpine:3.4")
