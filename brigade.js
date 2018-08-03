@@ -9,6 +9,8 @@ events.on("push", function(e, project) {
   build.tasks = [
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
+    "apk update",
+    "apk add git",
     "git checkout https://github.com/gctools-outilsgc/gcconnex.git",
     "cd gcconnex/",
     "Docker build -t gcconnex:$COMMIT ."
