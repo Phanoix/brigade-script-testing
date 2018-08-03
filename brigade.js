@@ -11,7 +11,7 @@ events.on("push", function(e, project) {
     "sleep 20", // Grant it enough time to be up and running
     "apk update",
     "apk add git",
-    "git checkout https://github.com/gctools-outilsgc/gcconnex.git",
+    "git clone https://github.com/gctools-outilsgc/gcconnex.git",
     "cd gcconnex/",
     "Docker build -t gcconnex:$COMMIT ."
   ]
