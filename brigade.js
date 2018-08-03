@@ -13,7 +13,7 @@ events.on("push", function(e, project) {
     "apk add git",
     "git clone https://github.com/gctools-outilsgc/gcconnex.git",
     "cd gcconnex/",
-    "Docker build -t gcconnex:$COMMIT ."
+    "docker build -t gcconnex:$COMMIT ."
   ]
   
   var hello = new Job("hello", "alpine:3.4")
