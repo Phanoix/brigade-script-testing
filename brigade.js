@@ -1,7 +1,7 @@
 const { events, Job } = require("brigadier");
 
-events.on("push", function(e, project) {
-  console.log("received push for commit " + e.revision.commit)
+events.on("image_push", function(e, project) {
+  var docker = JSON.parse(e.payload)
   
   var update = new Job("update", "python:3")
   update.env.TIMESTAMP = 0
