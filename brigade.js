@@ -3,8 +3,8 @@ const { events, Job } = require("brigadier");
 events.on("image_push", function(e, project) {
   var docker = JSON.parse(e.payload)
 
-  if (docker.tag != "latest") {
-    console.log(`ignoring non-master build for branch ${docker.tag}`)
+  if (docker.push_data.tag != "latest") {
+    console.log(`ignoring non-master build for branch ${docker.push_data.tag}`)
     return
   }
   
