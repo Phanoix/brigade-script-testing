@@ -14,5 +14,5 @@ events.on("image_push", function(e, project) {
     "pip install kubernetes",
     "python test.py"
   ]
-
+  update.run()
 })
