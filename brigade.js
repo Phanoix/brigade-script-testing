@@ -11,7 +11,7 @@ events.on("image_push", function(e, project) {
   var update = new Job("update", "python:3")
   update.tasks = [
     "pip install kubernetes",
-    "python test.py"
+    "sleep 360"
   ]
   update.run()
 })
