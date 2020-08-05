@@ -13,7 +13,6 @@ def k8s_get_deploy():
     config.load_incluster_config()
 
     v1 = client.AppsV1Api()
-    print("Listing pods with their IPs:")
     ret = v1.list_namespaced_deployment(watch=False, namespace="directory")
     for i in ret.items:
         print("=== %s\t%s\t%s\t%s" %
