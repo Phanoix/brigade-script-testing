@@ -33,7 +33,7 @@ if __name__ == "__main__":
     digest=get_latest_sha(repo)
 
     config.load_incluster_config()
-    deploy = k8s_get_deploy()
+    deploy = k8s_get_deploy("directory-fe")
 
     print("\n")
     print("%s\t%s\t%s\t%s" %
