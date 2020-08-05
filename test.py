@@ -9,16 +9,18 @@ def get_latest_sha(repo):
     sha = data["images"][0]["digest"]
     return sha
 
-def k8s_get_deploy():
+def k8s_get_deploy(name):
     config.load_incluster_config()
 
     v1 = client.AppsV1Api()
-    ret = v1.list_namespaced_deployment(watch=False, namespace="directory")
-    for i in ret.items:
-        print("=== %s\t%s\t%s\t%s" %
-            (i.spec.replicas, i.metadata.namespace, i.metadata.name, i.spec.template.spec.containers[0].image))
+    deploys = v1.list_namespaced_deployment(watch=False, namespace="directory")
+    for i in deploys.items:
+        if i.metadata.name == name:
+            print("=== %s\t%s\t%s\t%s" %
+                (i.spec.replicas, i.metadata.namespace, i.metadata.name, i.spec.template.spec.containers[0].image))
+            return i
 
-    return ret.items[0]
+    return False
 
 def k8s_patch_deploy(deploy):
     v1 = client.AppsV1Api()
