@@ -23,6 +23,7 @@ function checkRequested(e, p) {
   start.imageForcePull = true
   start.env = env
   start.env.CHECK_SUMMARY = "Beginning test run"
+  start.env.CHECK_DETAILS_URL = "https://dev.phanoix.com"
 
   const end = new Job("end-run", checkRunImage)
   end.imageForcePull = true
@@ -40,6 +41,7 @@ function checkRequested(e, p) {
     end.env.CHECK_CONCLUSION = "success"
     end.env.CHECK_SUMMARY = "Build completed"
     end.env.CHECK_TEXT = result.toString()
+    end.env.CHECK_DETAILS_URL = "https://dev.phanoix.com/foobar"
     return end.run()
   }).catch( (err) => {
     // In this case, we mark the ending failed.
