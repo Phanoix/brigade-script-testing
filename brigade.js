@@ -22,7 +22,7 @@ function checkRequested(e, p) {
   const start = new Job("start-run", checkRunImage)
   start.imageForcePull = true
   start.env = env
-  start.env.CHECK_SUMMARY = "Beginning test run"
+  start.env.CHECK_SUMMARY = "Beginning test run, see https://dev.phanoix.com"
   start.env.CHECK_DETAILS_URL = "https://dev.phanoix.com"
 
   const end = new Job("end-run", checkRunImage)
