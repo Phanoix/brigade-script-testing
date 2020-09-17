@@ -7,11 +7,44 @@ const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 const kubeConfig = new kubernetes.KubeConfig();
 kubeConfig.loadFromDefault();
 
-console.log(kubernetes)
+const k8sCoreClient = kubeConfig.makeApiClient(kubernetes.Core_v1Api);
 
 events.on("check_suite:requested", checkRequested)
 events.on("check_suite:rerequested", checkRequested)
 events.on("check_run:rerequested", checkRequested)
+
+
+const protectedEnvironment = namespaceName => {
+  const protectedNamespaces = ["default", "kube-public", "kube-system", "brigade"];
+
+  if (protectedNamespaces.includes(namespaceName)) {
+    return true;
+  }
+  return false;
+};
+
+const createNamespace = async namespaceName => {
+  const existingNamespace = await k8sCoreClient.listNamespace(
+    true,
+    "",
+    `metadata.name=${namespaceName}`,
+  );
+
+  if (existingNamespace.body.items.length) {
+    console.log(`Namespace "${namespaceName}" already exists`);
+    return;
+  }
+
+  const namespace = new kubernetes.V1Namespace();
+  namespace.metadata = new kubernetes.V1ObjectMeta();
+  namespace.metadata.name = namespaceName;
+
+  await k8sCoreClient.createNamespace(namespace);
+};
+
+const provisionEnvironment = async (environmentName, projects) => {
+  await createNamespace(environmentName);
+};
 
 function checkRequested(e, p) {
   console.log("check requested")
