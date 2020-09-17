@@ -70,25 +70,22 @@ function checkRequested(e, p) {
   end.imageForcePull = true
   end.env = env
 
+  console.log("creating ns");
+  const name = 'test';
+  if (protectedEnvironment(name)) {
+    throw Error(`Environment '${name}' is protected`);
+  }
+  provisionEnvironment(name, projects).catch(error => {
+    throw error;
+  });
+  
   // Now we run the jobs in order:
   // - Notify GitHub of start
   // - Run the test
   // - Notify GitHub of completion
   //
   // On error, we catch the error and notify GitHub of a failure.
-  start.run().then(() => {
-    const name = 'test';
-
-    if (!name) {
-      throw Error("Environment name must be specified");
-    }
-    if (protectedEnvironment(name)) {
-      throw Error(`Environment '${name}' is protected`);
-    }
-    provisionEnvironment(name, projects).catch(error => {
-      throw error;
-    });
-    
+  start.run().then(() => {    
     return build.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
