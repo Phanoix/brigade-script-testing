@@ -7,7 +7,7 @@ const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 const kubeConfig = new kubernetes.KubeConfig();
 kubeConfig.loadFromDefault();
 
-const k8sCoreClient = kubeConfig.makeApiClient(kubernetes.Corev1Api);
+const k8sCoreClient = kubeConfig.makeApiClient(kubernetes.CoreV1Api);
 
 events.on("check_suite:requested", checkRequested)
 events.on("check_suite:rerequested", checkRequested)
