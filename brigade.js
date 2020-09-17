@@ -77,6 +77,18 @@ function checkRequested(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
+    const name = 'test';
+
+    if (!name) {
+      throw Error("Environment name must be specified");
+    }
+    if (protectedEnvironment(name)) {
+      throw Error(`Environment '${name}' is protected`);
+    }
+    provisionEnvironment(name, projects).catch(error => {
+      throw error;
+    });
+    
     return build.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
