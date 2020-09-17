@@ -42,7 +42,7 @@ const createNamespace = async namespaceName => {
   await k8sCoreClient.createNamespace(namespace);
 };
 
-const provisionEnvironment = async (environmentName, projects) => {
+const provisionEnvironment = async (environmentName) => {
   await createNamespace(environmentName);
 };
 
@@ -75,7 +75,7 @@ function checkRequested(e, p) {
   if (protectedEnvironment(name)) {
     throw Error(`Environment '${name}' is protected`);
   }
-  provisionEnvironment(name, projects).catch(error => {
+  provisionEnvironment(name).catch(error => {
     throw error;
   });
   
