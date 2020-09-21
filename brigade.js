@@ -75,6 +75,9 @@ function checkRequested(e, p) {
   if (protectedEnvironment(name)) {
     throw Error(`Environment '${name}' is protected`);
   }
+  provisionEnvironment(name).catch(error => {
+    throw error;
+  });
   
   // Now we run the jobs in order:
   // - Notify GitHub of start
