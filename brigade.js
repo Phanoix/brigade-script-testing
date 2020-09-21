@@ -71,7 +71,7 @@ function checkRequested(e, p) {
   end.env = env
 
   console.log("creating ns");
-  const name = 'test';
+  const name = 'test1';
   if (protectedEnvironment(name)) {
     throw Error(`Environment '${name}' is protected`);
   }
