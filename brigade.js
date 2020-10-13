@@ -1,9 +1,7 @@
 const { events, Job } = require("brigadier");
 const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 
-events.on("check_suite:requested", checkRequested)
-events.on("check_suite:rerequested", checkRequested)
-events.on("check_run:rerequested", checkRequested)
+events.on("pull_request:opened", checkRequested)
 
 function checkRequested(e, p) {
   console.log("check requested")
