@@ -10,8 +10,6 @@ kubeConfig.loadFromDefault();
 const k8sCoreClient = kubeConfig.makeApiClient(kubernetes.CoreV1Api);
 
 events.on("check_suite:requested", checkRequested)
-events.on("check_suite:rerequested", checkRequested)
-events.on("check_run:rerequested", checkRequested)
 
 
 const protectedEnvironment = namespaceName => {
