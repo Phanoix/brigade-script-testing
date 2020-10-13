@@ -3,6 +3,7 @@ const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 
 events.on("pull_request:opened", checkRequested)
 
+
 function checkRequested(e, p) {
   console.log("check requested")
   // Common configuration
