@@ -19,7 +19,7 @@ function installSite(e, p) {
 
   console.log(e.payload)
   
-  console.log(e.payload.number)
+  console.log(JSON.parse(e.payload).number)
 
   install.run()
 }
@@ -36,7 +36,7 @@ function cleanupResources(e, p) {
 
   console.log(e.payload)
   
-  console.log(e.payload.number)
+  console.log(JSON.parse(e.payload).number)
 
   cleanup.run()
 }
