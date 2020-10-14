@@ -14,8 +14,10 @@ function installSite(e, p) {
     "kubectl create namespace pr-${PR_NUMBER}"
   ]
   install.env = {
-    PR_NUMBER: e.payload.number
+    PR_NUMBER: "0"
   }
+
+  console.log(e.payload)
 
   install.run()
 }
@@ -27,8 +29,10 @@ function cleanupResources(e, p) {
     "kubectl delete namespace pr-${PR_NUMBER}"
   ]
   cleanup.env = {
-    PR_NUMBER: e.payload.number
+    PR_NUMBER: "0"
   }
+
+  console.log(e.payload)
 
   cleanup.run()
 }
