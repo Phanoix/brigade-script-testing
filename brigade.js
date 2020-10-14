@@ -13,8 +13,9 @@ function installSite(e, p) {
   install.tasks = [
     "kubectl create namespace pr-${PR_NUMBER}"
   ]
+  let prnum = ""+JSON.parse(e.payload).number
   install.env = {
-    PR_NUMBER: JSON.parse(e.payload).number
+    PR_NUMBER: prnum
   }
 
   install.run()
@@ -26,8 +27,9 @@ function cleanupResources(e, p) {
   cleanup.tasks = [
     "kubectl delete namespace pr-${PR_NUMBER}"
   ]
+  let prnum = ""+JSON.parse(e.payload).number
   cleanup.env = {
-    PR_NUMBER: JSON.parse(e.payload).number
+    PR_NUMBER: prnum
   }
 
   cleanup.run()
