@@ -9,7 +9,7 @@ events.on("pull_request:closed", cleanupResources)
 
 function installSite(e, p) {
   // will use helm to install
-  var install = new Job("install", "lachlanevenson/k8s-kubectl:1.17")
+  var install = new Job("install", "lachlanevenson/k8s-kubectl")
   install.tasks = [
     "kubectl create namespace pr-${PR_NUMBER}"
   ]
@@ -22,7 +22,7 @@ function installSite(e, p) {
 
 function cleanupResources(e, p) {
   // delete the namespace for the PR site
-  var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl:1.17")
+  var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl")
   cleanup.tasks = [
     "kubectl delete namespace pr-${PR_NUMBER}"
   ]
