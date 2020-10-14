@@ -9,10 +9,9 @@ events.on("pull_request:closed", cleanupResources)
 
 function installSite(e, p) {
   // will use helm to install
-  var install = new Job("install", "python:3")
+  var install = new Job("install", "lachlanevenson/k8s-kubectl:1.17")
   install.tasks = [
-    "pip install kubernetes",
-    "python /src/createNS.py"
+    "kubectl create namespace pr-${PR_NUMBER}"
   ]
   install.env = {
     PR_NUMBER = "0"
@@ -23,10 +22,9 @@ function installSite(e, p) {
 
 function cleanupResources(e, p) {
   // delete the namespace for the PR site
-  var cleanup = new Job("cleanup", "python:3")
+  var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl:1.17")
   cleanup.tasks = [
-    "pip install kubernetes",
-    "python /src/deleteNS.py"
+    "kubectl delete namespace pr-${PR_NUMBER}"
   ]
   cleanup.env = {
     PR_NUMBER = "0"
