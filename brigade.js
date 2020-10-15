@@ -18,9 +18,7 @@ function createNS(e, p) {
     PR_NUMBER: prnum
   }
 
-  installNS.run().then(() => {
-    installChart.run()
-  })
+  installNS.run()
 }
 
 function cleanupResources(e, p) {
