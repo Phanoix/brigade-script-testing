@@ -41,6 +41,7 @@ function updateSite(e, p) {
   console.log("update requested")
 
   let payload = JSON.parse(e.payload)
+  let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
   // Common configuration
   const env = {
     CHECK_PAYLOAD: e.payload,
@@ -49,7 +50,6 @@ function updateSite(e, p) {
   }
   
   // This will create or update the review site
-  let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
   const installChart = new Job("installChart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
     'apk add git',
