@@ -2,23 +2,25 @@ const { events, Job } = require("brigadier");
 const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 
 events.on("check_suite:requested", updateSite)
-events.on("pull_request:opened", installSite)
-events.on("pull_request:reopened", installSite)
+events.on("pull_request:opened", createNS)
+events.on("pull_request:reopened", createNS)
 events.on("pull_request:closed", cleanupResources)
 
 
-function installSite(e, p) {
-  // will use helm to install
-  var install = new Job("install", "lachlanevenson/k8s-kubectl")
-  install.tasks = [
+function createNS(e, p) {
+  let prnum = ""+JSON.parse(e.payload).number
+
+  var installNS = new Job("installNS", "lachlanevenson/k8s-kubectl")
+  installNS.tasks = [
     "kubectl create namespace pr-${PR_NUMBER}"
   ]
-  let prnum = ""+JSON.parse(e.payload).number
-  install.env = {
+  installNS.env = {
     PR_NUMBER: prnum
   }
 
-  install.run()
+  installNS.run().then(() => {
+    installChart.run()
+  })
 }
 
 function cleanupResources(e, p) {
@@ -37,17 +39,30 @@ function cleanupResources(e, p) {
 
 function updateSite(e, p) {
   console.log("update requested")
+
+  let payload = JSON.parse(e.payload)
   // Common configuration
   const env = {
     CHECK_PAYLOAD: e.payload,
     CHECK_NAME: "Review Site",
-    CHECK_TITLE: "Testing 123",
+    CHECK_TITLE: "Testing https://pr-"+prnum+".test.phanoix.com/",
+  }
+  
+  // This will create or update the review site
+  let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
+  const installChart = new Job("installChart", "lachlanevenson/k8s-helm")
+  installChart.tasks = [
+    'apk add git',
+    'git clone https://github.com/gctools-outilsgc/gcconnex.git',
+    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_NUMBER} \
+    --set url="https://pr-${PR_NUMBER}.test.phanoix.com/" \
+    --set image.tag="${PR_BRANCH}"'
+  ]
+  installChart.env = {
+    PR_NUMBER: prnum,
+    PR_BRANCH: payload.check_suite.head_branch
   }
 
-  // This will represent our build job. For us, it's just an empty thinger.
-  const build = new Job("build", "alpine:3.7", ["sleep 60", "echo hello"])
-
-  // For convenience, we'll create three jobs: one for each GitHub Check
   // stage.
   const start = new Job("start-run", checkRunImage)
   start.imageForcePull = true
@@ -65,7 +80,7 @@ function updateSite(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
-    return build.run()
+    return installChart.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
     end.env.CHECK_SUMMARY = "Build completed"
