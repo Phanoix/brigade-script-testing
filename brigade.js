@@ -41,6 +41,10 @@ function updateSite(e, p) {
   console.log("update requested")
 
   let payload = JSON.parse(e.payload)
+
+  if (!payload.check_suite || !payload.check_suite.pull_requests)
+    return 0
+
   let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
 
   if (!prnum)
