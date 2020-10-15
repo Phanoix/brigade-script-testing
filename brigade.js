@@ -10,7 +10,7 @@ events.on("pull_request:closed", cleanupResources)
 function createNS(e, p) {
   let prnum = ""+JSON.parse(e.payload).number
 
-  var installNS = new Job("installNS", "lachlanevenson/k8s-kubectl")
+  var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
   installNS.tasks = [
     "kubectl create namespace pr-${PR_NUMBER}"
   ]
@@ -58,7 +58,7 @@ function updateSite(e, p) {
   }
   
   // This will create or update the review site
-  const installChart = new Job("installChart", "lachlanevenson/k8s-helm")
+  const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
     'apk add git',
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
