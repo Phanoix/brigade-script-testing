@@ -40,13 +40,17 @@ function updateSite(e, p) {
 
   let payload = JSON.parse(e.payload)
 
-  if (!payload.check_suite || !payload.check_suite.pull_requests)
+  if (!payload.check_suite || !payload.check_suite.pull_requests){
+    console.log("Not a PR")
     return 0
+  }
 
   let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
 
-  if (!prnum)
+  if (!prnum){
+    console.log("Malformed PR JSON")
     return 0
+  }
   
   // Common configuration
   const env = {
