@@ -42,6 +42,10 @@ function updateSite(e, p) {
 
   let payload = JSON.parse(e.payload)
   let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
+
+  if (!prnum)
+    return 0
+  
   // Common configuration
   const env = {
     CHECK_PAYLOAD: e.payload,
