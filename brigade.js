@@ -8,28 +8,44 @@ events.on("pull_request:closed", cleanupResources)
 
 
 function createNS(e, p) {
-  let prnum = ""+JSON.parse(e.payload).number
+  let prbranch = JSON.parse(e.payload).pull_request.head.ref
 
   var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
   installNS.tasks = [
-    "kubectl create namespace pr-${PR_NUMBER}"
+    "kubectl create namespace pr-${PR_BRANCH}"
   ]
   installNS.env = {
-    PR_NUMBER: prnum
+    PR_BRANCH: prbranch
   }
 
-  installNS.run()
+  // This will create the review site
+  const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
+  installChart.tasks = [
+    'apk add git',
+    'git clone https://github.com/gctools-outilsgc/gcconnex.git',
+    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} \
+    --set url="https://pr-${PR_BRANCH}.test.phanoix.com/" \
+    --set image.tag="${PR_BRANCH}"'
+  ]
+  installChart.env = {
+    PR_BRANCH: prbranch,
+    PR_BRANCH: payload.check_suite.head_branch
+  }
+
+  installNS.run().then(
+    () => installChart.run()
+  )
 }
 
 function cleanupResources(e, p) {
   // delete the namespace for the PR site
   var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl")
   cleanup.tasks = [
-    "kubectl delete namespace pr-${PR_NUMBER}"
+    "kubectl delete namespace pr-${PR_BRANCH}"
   ]
-  let prnum = ""+JSON.parse(e.payload).number
+  let prbranch = JSON.parse(e.payload).pull_request.head.ref
   cleanup.env = {
-    PR_NUMBER: prnum
+    PR_BRANCH: prbranch
   }
 
   cleanup.run()
@@ -37,39 +53,36 @@ function cleanupResources(e, p) {
 
 function updateSite(e, p) {
   console.log("update requested")
+  console.log(e.payload)
 
   let payload = JSON.parse(e.payload)
 
-  if (!payload.check_suite || !payload.check_suite.pull_requests){
-    console.log("Not a PR")
+  if (!payload.check_suite){
+    console.log("Malformed payload JSON")
     return 0
   }
 
-  let prnum = JSON.parse(payload.check_suite.pull_requests[0]).number
-
-  if (!prnum){
-    console.log("Malformed PR JSON")
-    return 0
-  }
+  let prbranch = payload.check_suite.head_branch
   
+
   // Common configuration
   const env = {
     CHECK_PAYLOAD: e.payload,
     CHECK_NAME: "Review Site",
-    CHECK_TITLE: "Testing https://pr-"+prnum+".test.phanoix.com/",
+    CHECK_TITLE: "Testing https://pr-"+prbranch+".test.phanoix.com/",
   }
   
-  // This will create or update the review site
+  // This will update the review site
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
     'apk add git',
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
-    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_NUMBER} \
-    --set url="https://pr-${PR_NUMBER}.test.phanoix.com/" \
+    'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
+    --set mariadb.auth.password=$(kubectl get secret --namespace test test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
     --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
-    PR_NUMBER: prnum,
+    PR_BRANCH: prbranch,
     PR_BRANCH: payload.check_suite.head_branch
   }
 
@@ -104,4 +117,3 @@ function updateSite(e, p) {
     return end.run()
   })
 }
-
