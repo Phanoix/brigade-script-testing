@@ -45,7 +45,7 @@ function cleanupResources(e, p) {
   var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl")
   cleanup.tasks = [
     "kubectl delete namespace pr-${PR_BRANCH}",
-    "kubectl create namespace pr-${PR_BRANCH}-connex"
+    "kubectl delete namespace pr-${PR_BRANCH}-connex"
   ]
   let prbranch = JSON.parse(e.payload).pull_request.head.ref
   cleanup.env = {
@@ -85,6 +85,9 @@ function updateSite(e, p) {
      && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
      --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
+     --set image.tag="${PR_BRANCH}"',
+    'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex --reuse-values \
+     --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH}-connex test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
      --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
