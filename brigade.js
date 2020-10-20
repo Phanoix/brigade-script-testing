@@ -12,20 +12,24 @@ function createNS(e, p) {
 
   var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
   installNS.tasks = [
-    "kubectl create namespace pr-${PR_BRANCH}"
+    "kubectl create namespace pr-${PR_BRANCH}",
+    "kubectl create namespace pr-${PR_BRANCH}-connex"
   ]
   installNS.env = {
     PR_BRANCH: prbranch
   }
 
-  // This will create the review site
+  // This will create the collaband connex review sites
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
     'apk add git',
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} \
     --set url="https://pr-${PR_BRANCH}.test.phanoix.com/" \
-    --set image.tag="${PR_BRANCH}"'
+    --set image.tag="${PR_BRANCH}"',
+    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex \
+    --set url="https://pr-${PR_BRANCH}-connex.test.phanoix.com/" \
+    --set image.tag="${PR_BRANCH}" --set env.init="gcconnex"'
   ]
   installChart.env = {
     PR_BRANCH: prbranch
@@ -40,7 +44,8 @@ function cleanupResources(e, p) {
   // delete the namespace for the PR site
   var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl")
   cleanup.tasks = [
-    "kubectl delete namespace pr-${PR_BRANCH}"
+    "kubectl delete namespace pr-${PR_BRANCH}",
+    "kubectl create namespace pr-${PR_BRANCH}-connex"
   ]
   let prbranch = JSON.parse(e.payload).pull_request.head.ref
   cleanup.env = {
