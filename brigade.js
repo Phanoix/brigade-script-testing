@@ -77,7 +77,7 @@ function updateSite(e, p) {
     'apk add git',
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
-    --set mariadb.auth.password=$(kubectl get secret --namespace test test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
+    --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
     --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
