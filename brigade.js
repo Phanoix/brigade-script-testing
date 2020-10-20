@@ -78,9 +78,9 @@ function updateSite(e, p) {
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl \
      && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
-    'echo $(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode)',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
-    --set image.tag="${PR_BRANCH}"'
+     --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
+     --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
     PR_BRANCH: prbranch
