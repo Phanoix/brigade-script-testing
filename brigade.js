@@ -54,7 +54,7 @@ function updateSite(e, p) {
   console.log("update requested")
   console.log(e.payload)
 
-  let payload = JSON.parse(e.payload)
+  let payload = JSON.parse(e.payload).body
 
   if (!payload.check_suite){
     console.log("Malformed payload JSON")
