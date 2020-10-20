@@ -28,8 +28,7 @@ function createNS(e, p) {
     --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
-    PR_BRANCH: prbranch,
-    PR_BRANCH: payload.check_suite.head_branch
+    PR_BRANCH: prbranch
   }
 
   installNS.run().then(
