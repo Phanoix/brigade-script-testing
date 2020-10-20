@@ -74,7 +74,7 @@ function updateSite(e, p) {
   // This will update the review site
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
-    'apk add git curl',
+    'apk add --update coreutils git curl',
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl \
      && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
