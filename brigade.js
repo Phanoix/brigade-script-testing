@@ -2,34 +2,54 @@ const { events, Job } = require("brigadier");
 const checkRunImage = "brigadecore/brigade-github-check-run:latest"
 
 events.on("check_suite:requested", updateSite)
-events.on("pull_request:opened", installSite)
-events.on("pull_request:reopened", installSite)
+events.on("pull_request:opened", createNS)
+events.on("pull_request:reopened", createNS)
 events.on("pull_request:closed", cleanupResources)
 
 
-function installSite(e, p) {
-  // will use helm to install
-  var install = new Job("install", "lachlanevenson/k8s-kubectl")
-  install.tasks = [
-    "kubectl create namespace pr-${PR_NUMBER}"
+function createNS(e, p) {
+  let prbranch = JSON.parse(e.payload).pull_request.head.ref
+
+  var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
+  installNS.tasks = [
+    "kubectl create namespace pr-${PR_BRANCH}",
+    "kubectl create namespace pr-${PR_BRANCH}-connex"
   ]
-  let prnum = ""+JSON.parse(e.payload).number
-  install.env = {
-    PR_NUMBER: prnum
+  installNS.env = {
+    PR_BRANCH: prbranch
   }
 
-  install.run()
+  // This will create the collaband connex review sites
+  const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
+  installChart.tasks = [
+    'apk add git',
+    'git clone https://github.com/gctools-outilsgc/gcconnex.git',
+    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} \
+    --set url="https://pr-${PR_BRANCH}.test.phanoix.com/" \
+    --set image.tag="${PR_BRANCH}"',
+    'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex \
+    --set url="https://pr-${PR_BRANCH}-connex.test.phanoix.com/" \
+    --set image.tag="${PR_BRANCH}" --set env.init="gcconnex"'
+  ]
+  installChart.env = {
+    PR_BRANCH: prbranch
+  }
+
+  installNS.run().then(
+    () => installChart.run()
+  )
 }
 
 function cleanupResources(e, p) {
   // delete the namespace for the PR site
   var cleanup = new Job("cleanup", "lachlanevenson/k8s-kubectl")
   cleanup.tasks = [
-    "kubectl delete namespace pr-${PR_NUMBER}"
+    "kubectl delete namespace pr-${PR_BRANCH}",
+    "kubectl delete namespace pr-${PR_BRANCH}-connex"
   ]
-  let prnum = ""+JSON.parse(e.payload).number
+  let prbranch = JSON.parse(e.payload).pull_request.head.ref
   cleanup.env = {
-    PR_NUMBER: prnum
+    PR_BRANCH: prbranch
   }
 
   cleanup.run()
@@ -37,17 +57,43 @@ function cleanupResources(e, p) {
 
 function updateSite(e, p) {
   console.log("update requested")
+  console.log(e.payload)
+
+  let payload = JSON.parse(e.payload).body
+
+  if (!payload.check_suite){
+    console.log("Malformed payload JSON")
+    return 0
+  }
+
+  let prbranch = payload.check_suite.head_branch
+  
+
   // Common configuration
   const env = {
     CHECK_PAYLOAD: e.payload,
     CHECK_NAME: "Review Site",
-    CHECK_TITLE: "Testing 123",
+    CHECK_TITLE: "Testing https://pr-"+prbranch+".test.phanoix.com/",
+  }
+  
+  // This will update the review site
+  const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
+  installChart.tasks = [
+    'apk add --update coreutils git curl',
+    'git clone https://github.com/gctools-outilsgc/gcconnex.git',
+    'curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl \
+     && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
+    'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
+     --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
+     --set image.tag="${PR_BRANCH}"',
+    'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex --reuse-values \
+     --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH}-connex test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
+     --set image.tag="${PR_BRANCH}"'
+  ]
+  installChart.env = {
+    PR_BRANCH: prbranch
   }
 
-  // This will represent our build job. For us, it's just an empty thinger.
-  const build = new Job("build", "alpine:3.7", ["sleep 60", "echo hello"])
-
-  // For convenience, we'll create three jobs: one for each GitHub Check
   // stage.
   const start = new Job("start-run", checkRunImage)
   start.imageForcePull = true
@@ -65,10 +111,10 @@ function updateSite(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
-    return build.run()
+    return installChart.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
-    end.env.CHECK_SUMMARY = "Build completed"
+    end.env.CHECK_SUMMARY = "updated 'Testing https://pr-'+prbranch+'.test.phanoix.com/' and 'Testing https://pr-'+prbranch+'-connex.test.phanoix.com/'"
     end.env.CHECK_TEXT = result.toString()
     return end.run()
   }).catch( (err) => {
@@ -79,4 +125,3 @@ function updateSite(e, p) {
     return end.run()
   })
 }
-
