@@ -66,7 +66,7 @@ function updateSite(e, p) {
     return 0
   }
   
-  if (!payload.check_suite.pull_requests){
+  if (typeof payload.check_suite.pull_requests === 'undefined' || !payload.check_suite.pull_requests){
     console.log("not a PR")
     return 0
   }
