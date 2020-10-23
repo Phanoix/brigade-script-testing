@@ -70,6 +70,8 @@ function updateSite(e, p) {
     console.log("not a PR")
     return 0
   }
+  console.log("updating review site for PR " + payload.check_suite.pull_requests[0])
+  
 
   let prbranch = payload.check_suite.head_branch
   
