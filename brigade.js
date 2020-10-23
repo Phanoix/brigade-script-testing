@@ -66,11 +66,11 @@ function updateSite(e, p) {
     return 0
   }
   
-  if (typeof payload.check_suite.pull_requests === 'undefined' || !payload.check_suite.pull_requests){
+  if (!payload.check_suite.pull_requests || payload.check_suite.pull_requests.length == 0){
     console.log("not a PR")
     return 0
   }
-  console.log("updating review site for PR " + payload.check_suite.pull_requests[0])
+  console.log("updating review site for PR " + payload.check_suite.pull_requests)
   
 
   let prbranch = payload.check_suite.head_branch
