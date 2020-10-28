@@ -12,8 +12,8 @@ function createBuildJob(commit, p){
   var build = new Job("build", "docker:dind")
   build.privileged = true;
   build.env.COMMIT = commit
-  build.env.DOCKER_USER = p.secrets.dockerUsr
-  build.env.DOCKER_PASS = p.secrets.dockerPass
+  //build.env.DOCKER_USER = p.secrets.dockerUsr
+  //build.env.DOCKER_PASS = p.secrets.dockerPass
   build.tasks = [
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
