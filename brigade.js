@@ -12,6 +12,8 @@ function createBuildJob(commit, branch, p){
   var build = new Job("build", "docker:dind");
   build.privileged = true;
   build.env.COMMIT = commit;
+  build.env.DOCKER_USER = p.secrets.dockerUsr
+  build.env.DOCKER_PASS = p.secrets.dockerPass
   build.tasks = [
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
@@ -19,7 +21,10 @@ function createBuildJob(commit, branch, p){
     "git clone https://github.com/gctools-outilsgc/gcconnex.git",
     "cd /gcconnex/",
     "git config user.email 'you@example.com' && git config user.name 'Name' && git checkout master && git merge --no-edit origin/" + branch,
-    "docker build -t phanoix/gcconnex:$COMMIT ."
+    "docker build -t phanoix/gcconnex:$COMMIT .",
+    "docker login -u $DOCKER_USER -p $DOCKER_PASS",
+    "docker push phanoix/gcconnex:$COMMIT",
+    "docker logout"
   ];
 
   return build;
