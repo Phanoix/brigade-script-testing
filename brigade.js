@@ -7,7 +7,7 @@ events.on("pull_request:reopened", createNS)
 events.on("pull_request:closed", cleanupResources)
 
 
-function createBuildJob(commit, p){
+function createBuildJob(commit, branch, p){
   // build the new container and tag with git commit hash
   var build = new Job("build", "docker:dind");
   build.privileged = true;
@@ -16,9 +16,9 @@ function createBuildJob(commit, p){
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
     "apk update && apk add git",
-    "cd /src/",
-    "git status",
-    "ls -l",
+    "git clone https://github.com/gctools-outilsgc/gcconnex.git",
+    "cd /gcconnex/",
+    "git merge --no-edit " + branch,
     "docker build -t phanoix/gcconnex:$COMMIT ."
   ];
 
@@ -37,7 +37,7 @@ function createNS(e, p) {
     PR_BRANCH: prbranch
   }
 
-  const build = createBuildJob(JSON.parse(e.payload).pull_request.head.sha, p)
+  const build = createBuildJob(JSON.parse(e.payload).pull_request.head.sha, prbranch, p)
 
   // This will create the collaband connex review sites
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
@@ -103,7 +103,7 @@ function updateSite(e, p) {
     CHECK_TITLE: "Testing https://pr-"+prbranch+".test.phanoix.com/",
   }
   
-  const build = createBuildJob(payload.check_suite.head_sha, p)
+  const build = createBuildJob(payload.check_suite.head_sha, prbranch, p)
 
   // This will update the review site
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
