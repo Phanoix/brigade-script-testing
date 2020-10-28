@@ -10,10 +10,8 @@ events.on("pull_request:closed", cleanupResources)
 function createBuildJob(commit, p){
   // build the new container and tag with git commit hash
   var build = new Job("build", "docker:dind")
-  build.privileged = true;
+  build.privileged = true
   build.env.COMMIT = commit
-  //build.env.DOCKER_USER = p.secrets.dockerUsr
-  //build.env.DOCKER_PASS = p.secrets.dockerPass
   build.tasks = [
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
