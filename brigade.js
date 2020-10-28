@@ -18,8 +18,7 @@ function createBuildJob(commit, branch, p){
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
     "apk update && apk add git",
-    "git clone https://github.com/gctools-outilsgc/gcconnex.git",
-    "cd /gcconnex/",
+    "git clone https://github.com/gctools-outilsgc/gcconnex.git && cd /gcconnex/",
     "git config user.email 'you@example.com' && git config user.name 'Name' && git checkout master && git merge --no-edit origin/" + branch,
     "docker build -t phanoix/gcconnex:$COMMIT .",
     "docker login -u $DOCKER_USER -p $DOCKER_PASS",
