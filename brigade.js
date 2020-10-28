@@ -7,8 +7,31 @@ events.on("pull_request:reopened", createNS)
 events.on("pull_request:closed", cleanupResources)
 
 
+function createBuildJob(commit, branch, p){
+  // build the new container and tag with git commit hash
+  var build = new Job("build", "docker:dind");
+  build.privileged = true;
+  build.env.COMMIT = commit;
+  build.env.DOCKER_USER = p.secrets.dockerUsr
+  build.env.DOCKER_PASS = p.secrets.dockerPass
+  build.tasks = [
+    "dockerd-entrypoint.sh &", // Start the docker daemon
+    "sleep 20", // Grant it enough time to be up and running
+    "apk update && apk add git",
+    "git clone https://github.com/gctools-outilsgc/gcconnex.git && cd /gcconnex/",
+    "git config user.email 'you@example.com' && git config user.name 'Name' && git checkout master && git merge --no-edit origin/" + branch,
+    "docker build -t phanoix/gcconnex:$COMMIT .",
+    "docker login -u $DOCKER_USER -p $DOCKER_PASS",
+    "docker push phanoix/gcconnex:$COMMIT",
+    "docker logout"
+  ];
+
+  return build;
+}
+
 function createNS(e, p) {
-  let prbranch = JSON.parse(e.payload).pull_request.head.ref
+  const prbranch = JSON.parse(e.payload).pull_request.head.ref
+  const prsha = JSON.parse(e.payload).pull_request.head.sha
 
   var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
   installNS.tasks = [
@@ -19,6 +42,8 @@ function createNS(e, p) {
     PR_BRANCH: prbranch
   }
 
+  const build = createBuildJob(prsha, prbranch, p)
+
   // This will create the collaband connex review sites
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
@@ -26,13 +51,14 @@ function createNS(e, p) {
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} \
     --set url="https://pr-${PR_BRANCH}.test.phanoix.com/" \
-    --set image.tag="${PR_BRANCH}"',
+    --set image.tag="${PR_SHA}"',
     'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex \
     --set url="https://pr-${PR_BRANCH}-connex.test.phanoix.com/" \
-    --set image.tag="${PR_BRANCH}" --set env.init="gcconnex"'
+    --set image.tag="${PR_SHA}" --set env.init="gcconnex"'
   ]
   installChart.env = {
-    PR_BRANCH: prbranch
+    PR_BRANCH: prbranch,
+    PR_SHA: prsha
   }
 
   installNS.run().then(
@@ -73,7 +99,8 @@ function updateSite(e, p) {
   console.log("updating review site for PR " + payload.check_suite.pull_requests)
   
 
-  let prbranch = payload.check_suite.head_branch
+  const prbranch = payload.check_suite.head_branch
+  const prsha = payload.check_suite.head_sha
   
 
   // Common configuration
@@ -83,6 +110,8 @@ function updateSite(e, p) {
     CHECK_TITLE: "Testing https://pr-"+prbranch+".test.phanoix.com/",
   }
   
+  const build = createBuildJob(prsha, prbranch, p)
+
   // This will update the review site
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
   installChart.tasks = [
@@ -92,13 +121,14 @@ function updateSite(e, p) {
      && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
      --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
-     --set image.tag="${PR_BRANCH}"',
+     --set image.tag="${PR_SHA}"',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex --reuse-values \
      --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH}-connex test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
-     --set image.tag="${PR_BRANCH}"'
+     --set image.tag="${PR_SHA}"'
   ]
   installChart.env = {
-    PR_BRANCH: prbranch
+    PR_BRANCH: prbranch,
+    PR_SHA: prsha
   }
 
   // stage.
@@ -118,6 +148,9 @@ function updateSite(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
+    build.privileged = true;
+    return build.run()
+  }).then(() => {
     return installChart.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
