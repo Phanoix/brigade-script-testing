@@ -17,7 +17,8 @@ function createBuildJob(commit, p){
     "sleep 20", // Grant it enough time to be up and running
     "apk update && apk add git",
     "cd /src/",
-    //"docker build -t phanoix/gcconnex:$COMMIT ."
+    "git status",
+    "docker build -t phanoix/gcconnex:$COMMIT ."
   ];
 
   return build;
