@@ -121,13 +121,14 @@ function updateSite(e, p) {
      && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} --reuse-values \
      --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH} test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
-     --set image.tag="${PR_BRANCH}"',
+     --set image.tag="${PR_SHA}"',
     'helm upgrade test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex --reuse-values \
      --set mariadb.auth.password=$(kubectl get secret --namespace pr-${PR_BRANCH}-connex test-collab-env -o jsonpath="{.data.db-password}" | base64 --decode) \
-     --set image.tag="${PR_BRANCH}"'
+     --set image.tag="${PR_SHA}"'
   ]
   installChart.env = {
-    PR_BRANCH: prsha
+    PR_BRANCH: prbranch,
+    PR_SHA: prsha
   }
 
   // stage.
