@@ -18,6 +18,7 @@ function createBuildJob(commit, p){
     "apk update && apk add git",
     "cd /src/",
     "git status",
+    "ls -l",
     "docker build -t phanoix/gcconnex:$COMMIT ."
   ];
 
