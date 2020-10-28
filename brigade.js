@@ -30,7 +30,8 @@ function createBuildJob(commit, branch, p){
 }
 
 function createNS(e, p) {
-  let prbranch = JSON.parse(e.payload).pull_request.head.ref
+  const prbranch = JSON.parse(e.payload).pull_request.head.ref
+  const prsha = JSON.parse(e.payload).pull_request.head.sha
 
   var installNS = new Job("install-ns", "lachlanevenson/k8s-kubectl")
   installNS.tasks = [
@@ -41,7 +42,7 @@ function createNS(e, p) {
     PR_BRANCH: prbranch
   }
 
-  const build = createBuildJob(JSON.parse(e.payload).pull_request.head.sha, prbranch, p)
+  const build = createBuildJob(prsha, prbranch, p)
 
   // This will create the collaband connex review sites
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
@@ -50,13 +51,14 @@ function createNS(e, p) {
     'git clone https://github.com/gctools-outilsgc/gcconnex.git',
     'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH} \
     --set url="https://pr-${PR_BRANCH}.test.phanoix.com/" \
-    --set image.tag="${PR_BRANCH}"',
+    --set image.tag="${PR_SHA}"',
     'helm install test ./gcconnex/.chart/collab/ --namespace pr-${PR_BRANCH}-connex \
     --set url="https://pr-${PR_BRANCH}-connex.test.phanoix.com/" \
-    --set image.tag="${PR_BRANCH}" --set env.init="gcconnex"'
+    --set image.tag="${PR_SHA}" --set env.init="gcconnex"'
   ]
   installChart.env = {
-    PR_BRANCH: prbranch
+    PR_BRANCH: prbranch,
+    PR_SHA: prsha
   }
 
   installNS.run().then(
@@ -97,7 +99,8 @@ function updateSite(e, p) {
   console.log("updating review site for PR " + payload.check_suite.pull_requests)
   
 
-  let prbranch = payload.check_suite.head_branch
+  const prbranch = payload.check_suite.head_branch
+  const prsha = payload.check_suite.head_sha
   
 
   // Common configuration
@@ -107,7 +110,7 @@ function updateSite(e, p) {
     CHECK_TITLE: "Testing https://pr-"+prbranch+".test.phanoix.com/",
   }
   
-  const build = createBuildJob(payload.check_suite.head_sha, prbranch, p)
+  const build = createBuildJob(prsha, prbranch, p)
 
   // This will update the review site
   const installChart = new Job("install-chart", "lachlanevenson/k8s-helm")
@@ -124,7 +127,7 @@ function updateSite(e, p) {
      --set image.tag="${PR_BRANCH}"'
   ]
   installChart.env = {
-    PR_BRANCH: prbranch
+    PR_BRANCH: prsha
   }
 
   // stage.
