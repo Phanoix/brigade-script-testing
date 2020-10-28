@@ -18,9 +18,7 @@ function createBuildJob(commit, p){
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
     "cd /src/",
-    "docker build -t phanoix/gcconnex:$COMMIT .",
-    "docker login -u $DOCKER_USER -p $DOCKER_PASS",
-    "docker push phanoix/gcconnex:$COMMIT"
+    "docker build -t phanoix/gcconnex:$COMMIT ."
   ]
 
   return build
@@ -141,6 +139,8 @@ function updateSite(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
+    return build.run()
+  }).then(() => {
     return installChart.run()
   }).then( (result) => {
     end.env.CHECK_CONCLUSION = "success"
