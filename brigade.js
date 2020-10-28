@@ -18,7 +18,7 @@ function createBuildJob(commit, branch, p){
     "apk update && apk add git",
     "git clone https://github.com/gctools-outilsgc/gcconnex.git",
     "cd /gcconnex/",
-    "git merge --no-edit origin/" + branch,
+    "git config user.email 'you@example.com' && git config user.name 'Name' && git checkout master && git merge --no-edit origin/" + branch,
     "docker build -t phanoix/gcconnex:$COMMIT ."
   ];
 
