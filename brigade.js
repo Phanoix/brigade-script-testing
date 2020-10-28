@@ -9,17 +9,18 @@ events.on("pull_request:closed", cleanupResources)
 
 function createBuildJob(commit, p){
   // build the new container and tag with git commit hash
-  var build = new Job("build", "docker:dind")
-  build.privileged = true
-  build.env.COMMIT = commit
+  var build = new Job("build", "docker:dind");
+  build.privileged = true;
+  build.env.COMMIT = commit;
   build.tasks = [
     "dockerd-entrypoint.sh &", // Start the docker daemon
     "sleep 20", // Grant it enough time to be up and running
+    "apk update && apk add git",
     "cd /src/",
-    "docker build -t phanoix/gcconnex:$COMMIT ."
-  ]
+    //"docker build -t phanoix/gcconnex:$COMMIT ."
+  ];
 
-  return build
+  return build;
 }
 
 function createNS(e, p) {
@@ -137,6 +138,7 @@ function updateSite(e, p) {
   //
   // On error, we catch the error and notify GitHub of a failure.
   start.run().then(() => {
+    build.privileged = true;
     return build.run()
   }).then(() => {
     return installChart.run()
