@@ -4,15 +4,14 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  branches:
+    include:
+    - '*'
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
 - script: |
     echo Sync azure repo
     git clone --bare https://gctools@dev.azure.com/gctools/gctools-outilsgc/_git/brigade-script-testing.git
