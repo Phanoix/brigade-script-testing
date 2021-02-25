@@ -14,6 +14,10 @@ steps:
   displayName: 'Run a one-line script'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    echo Sync azure repo
+    git clone --bare https://gctools@dev.azure.com/gctools/gctools-outilsgc/_git/brigade-script-testing.git
+    cd brigade-script-testing
+    git remote add --mirror=fetch upstream https://github.com/Phanoix/brigade-script-testing.git
+    git fetch upstream --tags
+    git push origin --all
+  displayName: 'Sync repo'
