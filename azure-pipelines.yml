@@ -19,5 +19,7 @@ steps:
     cd brigade-script-testing.git
     git remote add --mirror=fetch upstream https://github.com/Phanoix/brigade-script-testing.git
     git fetch upstream --tags
-    git push origin --all
+    git -c http.extraHeader="Authorization: Basic ${PAT}" push origin --all
+  env:
+    PAT: $(PAT)
   displayName: 'Sync repo'
