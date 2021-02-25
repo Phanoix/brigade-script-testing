@@ -16,7 +16,7 @@ steps:
 - script: |
     echo Sync azure repo
     git clone --bare https://gctools@dev.azure.com/gctools/gctools-outilsgc/_git/brigade-script-testing.git
-    cd brigade-script-testing
+    cd brigade-script-testing.git
     git remote add --mirror=fetch upstream https://github.com/Phanoix/brigade-script-testing.git
     git fetch upstream --tags
     git push origin --all
