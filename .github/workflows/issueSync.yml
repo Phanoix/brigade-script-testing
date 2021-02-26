@@ -4,7 +4,7 @@ name: Sync
 
 on:
   issues:
-    types: [opened, edited, labeled, unlabeled, closed, reopened]
+    types: [opened, edited, deleted, closed, reopened, labeled, unlabeled, assigned]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -17,4 +17,14 @@ jobs:
 
     steps:  
       - name: GitHub Issues to Azure DevOps
-        uses: danhellem/github-actions-issue-to-work-item@1.6
+        uses: danhellem/github-actions-issue-to-work-item@1.7
+        env:
+          ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
+          github_token: "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
+          ado_organization: "gctools"
+          ado_project: "gctools-outilsgc"
+          ado_wit: "User Story"
+          ado_new_state: "New"
+          ado_active_state: "Active"
+          ado_close_state: "Closed"
+          ado_bypassrules: true
