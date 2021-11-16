@@ -6,6 +6,7 @@ name: Deploy Bicep files
 variables:
   vmImageName: 'ubuntu-latest'
   
+  ServiceConnection: ${ServiceConnectionName}
   resourceGroupName: 'biceptest'
   location: 'Canada Central'
   templateFile: 'biceptest/test.bicep'
@@ -15,7 +16,7 @@ pool:
 steps:
 - task: AzureCLI@2
   inputs:
-    azureSubscription: ${ServiceConnectionName}
+    azureSubscription: $ServiceConnection
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
