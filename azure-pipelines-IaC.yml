@@ -1,30 +1,24 @@
 trigger:
 - master
 
+name: Deploy Bicep files
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  
+  resourceGroupName: 'biceptest'
+  location: 'Canada Central'
+  templateFile: 'biceptest/test.bicep'
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: $(vmImageName)
 
 steps:
-- task: TerraformTaskV1@0
-  displayName: TF Init
+- task: AzureCLI@2
   inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
-    backendServiceArm: ${ServiceConnectionName}
-
-- task: TerraformTaskV1@0
-  displayName: TF Plan
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
-    environmentServiceNameAzureRM: ${ServiceConnectionName}
-
-- task: TerraformTaskV1@0
-  displayName: TF Apply
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
-    environmentServiceNameAzureRM: ${ServiceConnectionName}
+    azureSubscription: ${ServiceConnectionName}
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az --version
+      az group create --name $(resourceGroupName) --location $(location)
+      az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile)
