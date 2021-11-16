@@ -10,21 +10,21 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: $(System.DefaultWorkingDirectory)
-    backendServiceArm: $ServiceConnectionName
+    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
+    backendServiceArm: ${ServiceConnectionName}
 
 - task: TerraformTaskV1@0
   displayName: TF Plan
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: $(System.DefaultWorkingDirectory)
-    environmentServiceNameAzureRM: $ServiceConnectionName
+    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
+    environmentServiceNameAzureRM: ${ServiceConnectionName}
 
 - task: TerraformTaskV1@0
   displayName: TF Apply
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: $(System.DefaultWorkingDirectory)
-    environmentServiceNameAzureRM: $ServiceConnectionName
+    workingDirectory: $(System.DefaultWorkingDirectory)/TFtest
+    environmentServiceNameAzureRM: ${ServiceConnectionName}
