@@ -7,7 +7,6 @@ variables:
   vmImageName: 'ubuntu-latest'
   
   ServiceConnection: 'Visual Studio Enterprise (a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57)'
-  resourceGroupName: 'biceptest'
   location: 'Canada Central'
   templateFile: 'biceptest/test.bicep'
 pool:
@@ -21,4 +20,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az deployment sub create --resource-group $(resourceGroupName) --template-file $(templateFile)
+      az deployment sub create --location $(location) --template-file $(templateFile)
