@@ -21,4 +21,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile)
+      az deployment sub create --resource-group $(resourceGroupName) --template-file $(templateFile)
