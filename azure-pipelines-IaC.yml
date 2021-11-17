@@ -20,4 +20,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az deployment sub create --location $(location) --template-file $(templateFile)
+      az deployment sub create --location "$(location)" --template-file $(templateFile)
