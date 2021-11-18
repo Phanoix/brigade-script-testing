@@ -10,6 +10,7 @@ variables:
   location: 'Canada Central'
   RGtemplateFile: 'biceptest/resourcegroups.bicep'
   templateFile: 'biceptest/test.bicep'
+  RG: 'biceptest'
 pool:
   vmImage: $(vmImageName)
 
@@ -22,4 +23,6 @@ steps:
     inlineScript: |
       az --version
       az deployment sub what-if --location "$(location)" --template-file $(RGtemplateFile)
-      az deployment sub create --location "$(location)" --template-file $(templateFile)
+      az deployment sub create --location "$(location)" --template-file $(RGtemplateFile)
+      az deployment group what-if -g $(RG) --template-file $(templateFile)
+      az deployment group create -g $(RG) --template-file $(templateFile)
