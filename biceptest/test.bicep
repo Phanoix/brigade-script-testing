@@ -1,8 +1,11 @@
 
+param location string = resourceGroup().location
+param prefix string = 'phanbiceptest2'
+
 // Storage Account
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
-  name: 'phanbiceptest2'
-  location: 'Canada Central'
+  name: prefix
+  location: location
   sku: {
     name: 'Standard_LRS'
   }
