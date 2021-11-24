@@ -5,13 +5,13 @@ param location string = 'canadacentral'
 param appName string = 'phan'
 
 @secure()
-param tenantId string = subscription().tenantId
+param tenantId string
 
 @allowed([
-  'Standard'
-  'Premium'
+  'standard'
+  'premium'
 ])
-param sku string = 'Standard'
+param sku string = 'standard'
 
 var vaultName = 'vault-${appName}'
 
