@@ -7,6 +7,10 @@ param appName string = 'phan'
 @secure()
 param tenantId string = subscription().tenantId
 
+@allowed([
+  'Standard'
+  'Premium'
+])
 param sku string = 'Standard'
 
 var vaultName = 'vault-${appName}'
