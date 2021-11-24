@@ -23,7 +23,6 @@ module keyV './keyVault.bicep' = {
   scope: resourceGroup(newRG1.name)
   params: {
     appName: 'phan'
-    tenantId: tenantId
   }
 }
 
