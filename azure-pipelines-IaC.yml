@@ -9,6 +9,7 @@ variables:
   ServiceConnection: 'Visual Studio Enterprise (a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57)'
   location: 'canadacentral'
   RGtemplateFile: 'biceptest/resourcegroups.bicep'
+  TENANT: ${tenantId}
 pool:
   vmImage: $(vmImageName)
 
@@ -20,5 +21,5 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az deployment sub what-if --location $(location) --template-file $(RGtemplateFile)
-      az deployment sub create --location $(location) --template-file $(RGtemplateFile)
+      az deployment sub what-if --location $(location) --template-file $(RGtemplateFile) --parameters tenantId=${TENANT}
+      az deployment sub create --location $(location) --template-file $(RGtemplateFile) --parameters tenantId=${TENANT}
