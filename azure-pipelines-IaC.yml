@@ -20,6 +20,7 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
+      echo $TENANT
       az deployment sub what-if --location $(location) --template-file $(RGtemplateFile) --parameters tenantId=${TENANT}
       az deployment sub create --location $(location) --template-file $(RGtemplateFile) --parameters tenantId=${TENANT}
   env:
