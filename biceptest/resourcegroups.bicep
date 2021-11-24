@@ -1,7 +1,5 @@
 targetScope = 'subscription'
 
-param tenantId string
-
 resource newRG1 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: 'Biceptest'
   location: 'Canada Central'
