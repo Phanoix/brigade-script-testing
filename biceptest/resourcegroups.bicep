@@ -1,5 +1,7 @@
 targetScope = 'subscription'
 
+param tenantId string
+
 resource newRG1 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: 'Biceptest'
   location: 'Canada Central'
@@ -15,6 +17,15 @@ resource newRG3 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   location: 'Canada Central'
 }
 
+
+module keyV './keyVault.bicep' = {
+  name: 'keyV'
+  scope: resourceGroup(newRG1.name)
+  params: {
+    appName: 'phan'
+    tenantId: tenantId
+  }
+}
 
 module storage1 './test.bicep' = {
   name: 'storageDeploy'
