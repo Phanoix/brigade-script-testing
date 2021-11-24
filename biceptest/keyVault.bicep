@@ -1,8 +1,12 @@
 
 param location string = 'canadacentral'
-param appName string = 'phantest'
 
-param tenantId string
+@maxLength(6)
+param appName string = 'phan'
+
+@secure()
+param tenantId string = subscription().tenantId
+
 param sku string = 'Standard'
 
 var vaultName = 'vault-${appName}'
