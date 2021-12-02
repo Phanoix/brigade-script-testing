@@ -16,7 +16,7 @@ module func './app.bicep' = {
   name: 'func'
   scope: resourceGroup(devRG.name)
   params: {
-    appName: 'phanbicep'
+    appName: 'phanb'
     appService: plan.outputs.servicePlanID
     customDomain: 'test1.phanoix.com'
     appType: 'functionapp'
@@ -27,7 +27,7 @@ module web './app.bicep' = {
   name: 'web'
   scope: resourceGroup(devRG.name)
   params: {
-    appName: 'phanwbicep'
+    appName: 'phanwb'
     appService: plan.outputs.servicePlanID
     httpsOnly: false
     appType: 'app'
