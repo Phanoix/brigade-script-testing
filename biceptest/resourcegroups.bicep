@@ -1,43 +1,55 @@
 targetScope = 'subscription'
 
-resource newRG1 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: 'Biceptest'
+resource devRG 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: 'DEV'
   location: 'Canada Central'
 }
 
-resource newRG2 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: 'Biceptest2'
-  location: 'Canada Central'
+
+module plan './appPlan.bicep' = {
+  name: 'plan'
+  scope: resourceGroup(devRG.name)
+  params: {  }
 }
 
-resource newRG3 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: 'Biceptest3'
-  location: 'Canada Central'
+module func './app.bicep' = {
+  name: 'func'
+  scope: resourceGroup(devRG.name)
+  params: {
+    appName: 'phanbicep'
+    appService: plan.outputs.servicePlanID
+    customDomain: 'test1.phanoix.com'
+    appType: 'functionapp'
+  }
 }
+
+module web './app.bicep' = {
+  name: 'web'
+  scope: resourceGroup(devRG.name)
+  params: {
+    appName: 'phanwbicep'
+    appService: plan.outputs.servicePlanID
+    httpsOnly: false
+    appType: 'app'
+  }
+}
+
 
 
 module keyV './keyVault.bicep' = {
   name: 'keyV'
-  scope: resourceGroup(newRG1.name)
+  scope: resourceGroup(devRG.name)
   params: {
-    appName: 'phan'
+    appName: 'dphan'
     tenantId: subscription().tenantId
   }
 }
 
 module storage1 './test.bicep' = {
   name: 'storageDeploy'
-  scope: resourceGroup(newRG1.name)
+  scope: resourceGroup(devRG.name)
   params: {
-    prefix: 'phanbiceptest2'
+    prefix: 'dphan'
   }
 }
 
-
-module storage2 './test.bicep' = {
-  name: 'storageDeploy'
-  scope: resourceGroup(newRG3.name)
-  params: {
-    prefix: 'phanbiceptest3'
-  }
-}
