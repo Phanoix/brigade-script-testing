@@ -1,0 +1,46 @@
+{
+ "properties": {
+  "displayName": "Custom Set",
+  "policyType": "Custom",
+  "metadata": {
+   "createdBy": "5be650ea-4b1e-4e0a-9534-c9249f883cb3",
+   "createdOn": "2022-04-08T15:46:39.0853486Z",
+   "updatedBy": "5be650ea-4b1e-4e0a-9534-c9249f883cb3",
+   "updatedOn": "2022-04-08T17:44:00.4182979Z"
+  },
+  "policyDefinitions": [
+   {
+    "policyDefinitionReferenceId": "deny-vm-creation-test",
+    "policyDefinitionId": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyDefinitions/Deny-VM-Creation",
+    "parameters": {},
+    "groupNames": [
+     "Custom"
+    ]
+   },
+   {
+    "policyDefinitionReferenceId": "restrict-to-canada-central-and-canada-east-regions-for-resources",
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+    "parameters": {
+     "listOfAllowedLocations": {
+      "value": [
+       "canadacentral",
+       "canadaeast"
+      ]
+     }
+    },
+    "groupNames": [
+     "Custom"
+    ]
+   }
+  ],
+  "policyDefinitionGroups": [
+   {
+    "name": "Custom",
+    "displayName": "Custom Controls"
+   }
+  ]
+ },
+ "id": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policySetDefinitions/custom",
+ "type": "Microsoft.Authorization/policySetDefinitions",
+ "name": "custom"
+}
