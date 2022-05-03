@@ -1,0 +1,17 @@
+{
+ "sku": {
+  "name": "A0",
+  "tier": "Free"
+ },
+ "properties": {
+  "displayName": "Deny VM creation test",
+  "policyDefinitionId": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyDefinitions/Deny-VM-Creation2",
+  "scope": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57",
+  "parameters": {}
+  },
+  "enforcementMode": "DoNotEnforce"
+ },
+ "id": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyAssignments/no-vm-creation-test",
+ "type": "Microsoft.Authorization/policyAssignments",
+ "name": "no-vm-creation-test"
+}
