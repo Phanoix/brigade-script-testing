@@ -1,0 +1,53 @@
+{
+ "properties": {
+  "displayName": "Custom Set",
+  "policyType": "Custom",
+  "metadata": {
+   "createdBy": "5be650ea-4b1e-4e0a-9534-c9249f883cb3",
+   "createdOn": "2022-04-08T15:46:39.0853486Z",
+   "updatedBy": "f80694fd-5e42-4c92-8efd-7f06a92643e8",
+   "updatedOn": "2022-05-03T13:43:47.7245149Z",
+   "gitHubPolicy": {
+    "digest": "e81906031444e9f87bb1d8b500d8af7eed08e8a0",
+    "repoName": "Phanoix/brigade-script-testing",
+    "commitSha": "7272c95ca7a571b47d2734a845e4d099ce926a01",
+    "runUrl": "https://github.com/Phanoix/brigade-script-testing/actions/runs/2264158709",
+    "filepath": "GHpolicy-test/initiatives/Custom_Set_custom"
+   }
+  },
+  "policyDefinitions": [
+   {
+    "policyDefinitionReferenceId": "deny-vm-creation-test",
+    "policyDefinitionId": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyDefinitions/Deny-VM-Creation",
+    "parameters": {},
+    "groupNames": [
+     "Custom"
+    ]
+   },
+   {
+    "policyDefinitionReferenceId": "restrict-to-canada-central-and-canada-east-regions-for-resources",
+    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+    "parameters": {
+     "listOfAllowedLocations": {
+      "value": [
+       "canadacentral",
+       "canadaeast"
+      ]
+     }
+    },
+    "groupNames": [
+     "Custom"
+    ]
+   }
+  ],
+  "policyDefinitionGroups": [
+   {
+    "name": "Custom",
+    "displayName": "Custom Controls"
+   }
+  ]
+ },
+ "id": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policySetDefinitions/custom",
+ "type": "Microsoft.Authorization/policySetDefinitions",
+ "name": "custom"
+}

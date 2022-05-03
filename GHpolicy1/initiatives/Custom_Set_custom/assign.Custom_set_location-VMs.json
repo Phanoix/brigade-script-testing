@@ -1,0 +1,29 @@
+{
+ "sku": {
+  "name": "A0",
+  "tier": "Free"
+ },
+ "properties": {
+  "displayName": "Custom set",
+  "policyDefinitionId": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policySetDefinitions/custom",
+  "scope": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57",
+  "parameters": {},
+  "metadata": {
+   "createdBy": "5be650ea-4b1e-4e0a-9534-c9249f883cb3",
+   "createdOn": "2022-04-08T16:02:56.1754269Z",
+   "updatedBy": "f80694fd-5e42-4c92-8efd-7f06a92643e8",
+   "updatedOn": "2022-05-03T13:43:47.8976451Z",
+   "gitHubPolicy": {
+    "digest": "8149d01073dea04d694ce3d7a1853616828f550a",
+    "repoName": "Phanoix/brigade-script-testing",
+    "commitSha": "7272c95ca7a571b47d2734a845e4d099ce926a01",
+    "runUrl": "https://github.com/Phanoix/brigade-script-testing/actions/runs/2264158709",
+    "filepath": "GHpolicy-test/initiatives/Custom_Set_custom/assign.Custom_set_location-VMs.json"
+   }
+  },
+  "enforcementMode": "DoNotEnforce"
+ },
+ "id": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyAssignments/location-VMs",
+ "type": "Microsoft.Authorization/policyAssignments",
+ "name": "location-VMs"
+}
