@@ -33,6 +33,7 @@ jobs:
       with:
         paths: |
           GHpolicy1/policies/Deny_VM_Creation_test_Deny-VM-Creation/**
+          GHpolicy1/policies/Deny_VM_Creation_test_Deny-VM-Creation2/**
           GHpolicy1/initiatives/Custom_Set_custom/**
           GHpolicy1/policies/Allowed_locations_e56962a6-4747-49cd-b67b-bf8b01975c4c/**
           GHpolicy1/policies/Allowed_locations_for_resource_groups_e765b5de-1225-4ba3-bd56-1ac6695af988/**
