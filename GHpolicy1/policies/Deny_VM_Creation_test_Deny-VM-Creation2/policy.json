@@ -1,0 +1,25 @@
+{
+ "properties": {
+  "displayName": "Deny VM Creation test2",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "Deny VM Creation2 - v2",
+  "parameters": {},
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Compute/virtualMachines"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deny"
+   }
+  }
+ },
+ "id": "/subscriptions/a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57/providers/Microsoft.Authorization/policyDefinitions/Deny-VM-Creation2",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "Deny-VM-Creation2"
+}
