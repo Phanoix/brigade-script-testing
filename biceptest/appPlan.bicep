@@ -22,7 +22,7 @@ resource servicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: planName
   location: location
   sku: sku
-  kind: 'app'
+  kind: 'linux'
   properties: {
     perSiteScaling: false
     elasticScaleEnabled: false
