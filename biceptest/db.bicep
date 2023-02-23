@@ -30,7 +30,7 @@ resource AllowSubnet 'Microsoft.DBforMariaDB/servers/virtualNetworkRules@2018-06
   parent: server
   name: 'AllowSubnet'
   properties: {
-    virtualNetworkSubnetId: !empty(subnetID) ? subnetID : subnet.id
+    virtualNetworkSubnetId: subnetID
     ignoreMissingVnetServiceEndpoint: false
   }
 }
