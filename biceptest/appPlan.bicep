@@ -27,7 +27,7 @@ resource servicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
     elasticScaleEnabled: false
     maximumElasticWorkerCount: 1
     isSpot: false
-    reserved: false
+    reserved: true
     isXenon: false
     hyperV: false
     targetWorkerCount: 0
