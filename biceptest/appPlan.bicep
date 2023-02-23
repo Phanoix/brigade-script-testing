@@ -8,10 +8,9 @@ param location string = 'canadacentral'
 param env string = 'dev'
 
 param sku object = {
-    name: 'B1'
-    tier: 'Basic'
-    size: 'B1'
-    family: 'B'
+    name: 'P1v2'
+    tier: 'PremiumV2'
+    size: 'P1v2'
     capacity: 1
   }
 
