@@ -19,3 +19,10 @@ module db './db.bicep' = {
   params: {
   }
 }
+
+module subnet './vnet.bicep' = {
+  name: 'test_subnet'
+  scope: resourceGroup(devRG.name)
+  params: {
+  }
+}
