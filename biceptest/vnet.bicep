@@ -42,7 +42,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
 }
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-08-01' = {
-  name: name
+  name: 'dev'
   parent: vnet
   properties: {
     addressPrefix: '10.0.0.0/24'
