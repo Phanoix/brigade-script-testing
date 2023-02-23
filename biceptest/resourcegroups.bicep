@@ -17,6 +17,7 @@ module db './db.bicep' = {
   name: 'testcollab_db'
   scope: resourceGroup(devRG.name)
   params: {
+    subnetID: net.outputs.resourceId
   }
 }
 
