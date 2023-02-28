@@ -11,8 +11,20 @@ steps:
     echo $SourceBranch
     echo $SourceBranchName
     echo $SourceVersion
+    echo $PR_IS_FORK
+    echo $PR_ID
+    echo $PR_NUMBER
+    echo $PR_SOURCE
+    echo $PR_SOURCE_URI
+    echo $PR_TARGET
   env:
     SourceBranch: $(Build.SourceBranch)
     SourceBranchName: $(Build.SourceBranchName)
     SourceVersion: $(Build.SourceVersion)
+    PR_IS_FORK: $(System.PullRequest.IsFork)
+    PR_ID: $(System.PullRequest.PullRequestId)
+    PR_NUMBER: $(System.PullRequest.PullRequestNumber)
+    PR_SOURCE: $(System.PullRequest.SourceBranch)
+    PR_SOURCE_URI: $(System.PullRequest.SourceRepositoryURI)
+    PR_TARGET: $(System.PullRequest.TargetBranch)
   displayName: 'echo vars'
