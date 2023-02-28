@@ -8,7 +8,11 @@ pool:
 
 steps:
 - script: |
-    echo $Build.SourceBranch
-    echo $Build.SourceBranchName
-    echo $Build.SourceVersion
+    echo $SourceBranch
+    echo $SourceBranchName
+    echo $SourceVersion
+  env:
+    SourceBranch: $(Build.SourceBranch)
+    SourceBranchName: $(Build.SourceBranchName)
+    SourceVersion: $(Build.SourceVersion)
   displayName: 'echo vars'
