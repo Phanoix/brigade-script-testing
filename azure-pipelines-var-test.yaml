@@ -1,0 +1,14 @@
+trigger:
+  branches:
+    include:
+    - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    echo $Build.SourceBranch
+    echo $Build.SourceBranchName
+    echo $Build.SourceVersion
+  displayName: 'echo vars'
