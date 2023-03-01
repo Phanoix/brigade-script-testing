@@ -27,3 +27,11 @@ module net './vnet.bicep' = {
   params: {
   }
 }
+
+module net './containerRegistry.bicep' = {
+  name: 'test_acr'
+  scope: resourceGroup(devRG.name)
+  params: {
+    name: 'collabTestACR'
+  }
+}
