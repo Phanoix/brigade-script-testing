@@ -28,7 +28,7 @@ module net './vnet.bicep' = {
   }
 }
 
-module net './containerRegistry.bicep' = {
+module registry './containerRegistry.bicep' = {
   name: 'test_acr'
   scope: resourceGroup(devRG.name)
   params: {
