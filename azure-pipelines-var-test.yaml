@@ -8,7 +8,7 @@ pool:
 
 steps:
 - script: |
-    echo $SourceBranch
+    echo "Branch ref: $SourceBranch"
     echo $SourceBranchName
     echo $SourceVersion
     echo $PR_IS_FORK
