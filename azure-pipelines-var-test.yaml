@@ -12,7 +12,7 @@ steps:
     echo "Branch ref: $SourceBranch"
     echo "Branch name: $SourceBranchName"
     echo "Source Commit: $SourceVersion"
-    echo $PR_IS_FORK
+    echo "Source is a fork?: $PR_IS_FORK"
     echo $PR_ID
     echo $PR_NUMBER
     echo $PR_SOURCE
