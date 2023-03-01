@@ -12,8 +12,8 @@ pool:
 steps:
 - script: |
     echo "Branch ref: $SourceBranch"
-    echo "Branch name:$SourceBranchName"
-    echo $SourceVersion
+    echo "Branch name: $SourceBranchName"
+    echo "Source Commit: $SourceVersion"
     echo $PR_IS_FORK
     echo $PR_ID
     echo $PR_NUMBER
