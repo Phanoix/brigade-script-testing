@@ -15,7 +15,7 @@ pool:
 steps:
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'Visual Studio Enterprise (a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57)'
+    azureSubscription: 'Visual Studio Enterprise (a7b5a8d0-c8df-4fb1-8f6b-9080e188ef57)-1375'
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
