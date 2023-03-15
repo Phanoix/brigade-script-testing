@@ -37,5 +37,6 @@ steps:
 
 - script: |
     echo ${{ variables.prtarget }}
-    echo $( prtarget )
-    echo $[ variables.prtarget ]
+    echo $TARGET
+  env:
+    TARGET: $(prtarget)
