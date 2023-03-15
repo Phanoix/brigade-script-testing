@@ -18,7 +18,7 @@ steps:
     echo $PR_SOURCE
     echo $PR_SOURCE_URI
     echo $PR_TARGET
-    echo "##vso[task.setvariable variable=prtarget]something else"
+    curl -L https://api.github.com/repos/Phanoix/brigade-script-testing/issues/15/comments | grep comment && echo "##vso[task.setvariable variable=prtarget]something"
   env:
     SourceBranch: $(Build.SourceBranch)
     SourceBranchName: $(Build.SourceBranchName)
@@ -34,6 +34,6 @@ steps:
 - script: |
     echo ${{ variables.prtarget }}
     echo $TARGET
-  condition: and(succeeded(), eq(variables['prtarget'], 'master'))
+  condition: and(succeeded(), eq(variables['prtarget'], 'something'))
   env:
     TARGET: $(prtarget)
