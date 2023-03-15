@@ -18,7 +18,10 @@ steps:
     echo $PR_SOURCE
     echo $PR_SOURCE_URI
     echo $PR_TARGET
-    curl -L https://api.github.com/repos/Phanoix/brigade-script-testing/issues/15/comments | grep comment && echo "##vso[task.setvariable variable=prtarget]something"
+    if [ curl -L https://api.github.com/repos/Phanoix/brigade-script-testing/issues/15/comments | grep url ]
+      then
+        echo "##vso[task.setvariable variable=prtarget]something"
+    fi
   env:
     SourceBranch: $(Build.SourceBranch)
     SourceBranchName: $(Build.SourceBranchName)
