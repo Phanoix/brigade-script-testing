@@ -8,9 +8,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: testString
-  value: 'Test instance up at:'
-
+  testString: 'Test instance up at:'
+  
 
 steps:
 - script: |
