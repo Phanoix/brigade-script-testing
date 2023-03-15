@@ -42,6 +42,6 @@ steps:
 - script: |
     echo ${{ variables.prtarget }}
     echo $TARGET
-  condition: and(succeeded(), eq(variables['prtarget'], 'something'))
+  condition: and(succeeded(), ne(variables['prtarget'], 'something'))
   env:
     TARGET: $(prtarget)
