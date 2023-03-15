@@ -38,3 +38,4 @@ steps:
 - script: |
     echo ${{ variables.prtarget }}
     echo $( prtarget )
+    echo $[ variables.prtarget ]
