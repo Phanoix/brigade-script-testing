@@ -9,7 +9,7 @@ pool:
 
 variables:
 - name: prtarget
-  value: '' 
+  value: 'test' 
 
 steps:
 - script: |
