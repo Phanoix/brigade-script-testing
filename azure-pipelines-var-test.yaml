@@ -7,10 +7,6 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-- name: prtarget
-  value: 'test' 
-
 steps:
 - script: |
     echo "Branch ref: $SourceBranch"
@@ -38,5 +34,6 @@ steps:
 - script: |
     echo ${{ variables.prtarget }}
     echo $TARGET
+  condition: and(succeeded(), eq(variables['prtarget'], 'master'))
   env:
     TARGET: $(prtarget)
