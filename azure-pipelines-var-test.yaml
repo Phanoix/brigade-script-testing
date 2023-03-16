@@ -8,8 +8,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: prtarget
-  value: '' 
+  testString: 'Test instance up at:'
+  
 
 steps:
 - script: |
@@ -22,7 +22,9 @@ steps:
     echo $PR_SOURCE
     echo $PR_SOURCE_URI
     echo $PR_TARGET
-    echo "##vso[task.setvariable variable=prtarget]$PR_TARGET"
+    TEST=$(curl -L https://api.github.com/repos/gctools-outilsgc/gcconnex/issues/2496/comments | grep -c "${{ variables.testString }}")
+    echo "##vso[task.setvariable variable=prtarget]$TEST"
+
   env:
     SourceBranch: $(Build.SourceBranch)
     SourceBranchName: $(Build.SourceBranchName)
@@ -37,4 +39,7 @@ steps:
 
 - script: |
     echo ${{ variables.prtarget }}
-    echo $( prtarget )
+    echo $TARGET
+  condition: and(succeeded(), eq(variables['prtarget'], '0'))
+  env:
+    TARGET: $(prtarget)
