@@ -7,7 +7,7 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-container: ubuntu:18.04
+container: alpine:latest
 
 variables:
   testString: 'Test instance up at:'
