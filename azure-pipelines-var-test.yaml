@@ -7,8 +7,6 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-container: phanoix/gcconnex:latest
-
 variables:
   testString: 'Test instance up at:'
   
@@ -46,6 +44,7 @@ steps:
   env:
     TARGET: $(prtarget)
 
-- script: |
-    ls -l
-    php --version
+- task: DockerCompose@0
+  inputs:
+    containerregistrytype: 'DockerHub'
+    action: up
