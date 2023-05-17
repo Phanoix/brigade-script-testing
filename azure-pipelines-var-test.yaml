@@ -7,6 +7,8 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
+container: php:5.6-cli
+
 variables:
   testString: 'Test instance up at:'
   
@@ -44,7 +46,6 @@ steps:
   env:
     TARGET: $(prtarget)
 
-- task: DockerCompose@0
-  inputs:
-    containerregistrytype: 'DockerHub'
-    action: up
+- script: |
+  pvp --version
+  composer --version
