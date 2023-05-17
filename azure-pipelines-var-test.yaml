@@ -49,3 +49,4 @@ steps:
 - script: |
     php --version
     ls -l
+    composer install
