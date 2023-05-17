@@ -51,3 +51,4 @@ steps:
     ls -l
     cp /app/composer.json ./
     composer install
+    vendor/bin/phpunit
