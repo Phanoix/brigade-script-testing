@@ -48,4 +48,4 @@ steps:
 
 - script: |
     php --version
-    phpunit --version
+    ls -l
