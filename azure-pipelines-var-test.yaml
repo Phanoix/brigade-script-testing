@@ -7,7 +7,7 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-container: phanoix/gcconnex:phpunit-pipeline
+container: phanoix/collab-pipeline
 
 variables:
   testString: 'Test instance up at:'
