@@ -47,5 +47,5 @@ steps:
     TARGET: $(prtarget)
 
 - script: |
-  pvp --version
-  composer --version
+    php --version
+    composer --version
