@@ -49,4 +49,5 @@ steps:
 - script: |
     php --version
     ls -l
+    cp /app/composer.json ./
     composer install
