@@ -7,7 +7,7 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
-container: phanoix/collab-pipeline
+container: phanoix/collab-pipeline:latest
 
 variables:
   testString: 'Test instance up at:'
